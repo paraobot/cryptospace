@@ -220,10 +220,16 @@
 
                     const innerPlanet = document.createElement('div');
                     innerPlanet.classList.add('crypto-planet-inner');
-                    innerPlanet.style.backgroundColor = '#'+((1<<24)*Math.random()|0).toString(16);
-                    innerPlanet.style.width = `${size}px`;
-                    innerPlanet.style.height = `${size}px`;
-                    innerPlanet.textContent = crypto.symbol.toUpperCase();
+                    
+                    // Substituindo a cor aleatória pela imagem da moeda
+                    const planetImage = document.createElement('img');
+                    planetImage.src = crypto.image; // URL da imagem da moeda
+                    planetImage.alt = crypto.name;
+                    planetImage.style.width = `${size}px`;
+                    planetImage.style.height = `${size}px`;
+                    planetImage.style.borderRadius = '50%';
+
+                    innerPlanet.appendChild(planetImage);
 
                     planet.addEventListener('mouseover', () => {
                         infoPanel.innerHTML = `
@@ -244,9 +250,9 @@
             }
         }
 
-        // Inicializa a página criando estrelas e carregando os dados das criptomoedas
         createStars();
         loadUniverse('market_cap');
     </script>
 </body>
 </html>
+
