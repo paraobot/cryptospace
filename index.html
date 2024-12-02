@@ -181,7 +181,6 @@
 
     <script>
         let chaosMode = false;
-        let cryptoData = [];
 
         function createStars() {
             const starsContainer = document.getElementById('starContainer');
@@ -209,71 +208,68 @@
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                cryptoData = data.slice(0, 30);  // Store data globally for easy access
 
                 const cryptoPlanetsContainer = document.getElementById('cryptoPlanetsContainer');
                 const infoPanel = document.getElementById('cryptoInfo');
 
                 cryptoPlanetsContainer.innerHTML = '';
-                cryptoData.forEach((crypto, index) => {
+                data.slice(0, 10).forEach((crypto, index) => {
                     const distance = 100 + index * 50;
                     const size = Math.min(50 + Math.sqrt(crypto.market_cap / 1e9), 100); // Adjust size
                     const planet = document.createElement('div');
                     planet.classList.add('crypto-planet');
                     planet.style.setProperty('--distance', `${distance}px`);
-
-                    // Set a unique ID for each planet (crypto)
-                    planet.setAttribute('data-name', crypto.name);
-                    planet.setAttribute('data-price', `$${crypto.current_price.toFixed(2)}`);
-
-                    // Reduce animation time in chaos mode to speed it up
-                    const orbitDuration = chaosMode ? `${10 - index % 5}s` : `${20 - index}s`; // Shorter orbits in chaos mode
-                    planet.style.animation = `orbit ${orbitDuration} linear infinite`;
-
-                    const planetImage = document.createElement('img');
-                    planetImage.src = crypto.image;
-                    planetImage.alt = crypto.name;
-                    planetImage.style.width = '60px';
-                    planetImage.style.height = '60px';
+                    planet.style.animation = `orbit ${20 - index}s linear infinite`;
 
                     const innerPlanet = document.createElement('div');
                     innerPlanet.classList.add('crypto-planet-inner');
+                    
+                    // Add image of cryptocurrency
+                    const planetImage = document.createElement('img');
+                    planetImage.src = crypto.image; // Image URL
+                    planetImage.alt = crypto.name;
+                    planetImage.style.width = `${size}px`;
+                    planetImage.style.height = `${size}px`;
+                    planetImage.style.borderRadius = '50%';
+
                     innerPlanet.appendChild(planetImage);
+
+                    // Chaos Mode: price fluctuation animation
+                    if (chaosMode) {
+                        const priceChange = crypto.price_change_percentage_24h || 0;
+                        planet.style.animation = `orbit ${10 - index}s linear infinite`;  // Faster orbit for chaos mode
+                        planet.style.transform = `translateY(${priceChange * 1.5}px)`;
+                    }
+
                     planet.appendChild(innerPlanet);
 
-                    planet.addEventListener('mouseover', function() {
-                        infoPanel.innerHTML = `${crypto.name}: ${crypto.current_price.toFixed(2)} USD`;
+                    planet.addEventListener('mouseover', () => {
+                        infoPanel.innerHTML = `
+                            <strong>${crypto.name}</strong><br>
+                            Price: $${crypto.current_price.toFixed(2)}<br>
+                            24h Change: ${crypto.price_change_percentage_24h.toFixed(2)}%
+                        `;
                     });
 
-                    planet.addEventListener('mouseout', function() {
-                        infoPanel.innerHTML = 'Click on a planet for details';
+                    planet.addEventListener('mouseout', () => {
+                        infoPanel.innerHTML = 'Hover over a planet to see details.';
                     });
 
                     cryptoPlanetsContainer.appendChild(planet);
                 });
 
                 document.getElementById('loadingSpinner').style.display = 'none';  // Hide spinner
-
             } catch (error) {
-                console.error(error);
-                document.getElementById('cryptoInfo').innerHTML = 'Failed to load data';
-                document.getElementById('loadingSpinner').style.display = 'none';  // Hide spinner
+                console.error("Error fetching cryptocurrency data", error);
+                document.getElementById('cryptoInfo').innerText = 'Error loading data';
             }
         }
 
         function toggleChaosMode() {
             chaosMode = !chaosMode;
-            if (chaosMode) {
-                document.body.style.backgroundColor = '#ff0000'; // Set background to red for Chaos Mode
-                document.querySelector('.title').style.color = '#fff';
-            } else {
-                document.body.style.backgroundColor = '#0a0a2a'; // Reset background
-                document.querySelector('.title').style.color = '#fff';
-            }
-            loadUniverse('market_cap');
+            loadUniverse('market_cap');  // Reload with the same category
         }
 
-        // Initialize the space with stars and planets
         createStars();
         loadUniverse('market_cap');
     </script>
