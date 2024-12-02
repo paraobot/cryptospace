@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,7 +141,7 @@
             font-size: 14px;
             border-radius: 5px;
         }
-        /* Spinner de carregamento */
+        /* Spinner */
         .spinner {
             position: absolute;
             top: 50%;
@@ -168,17 +168,20 @@
         <div class="stars" id="starContainer"></div>
         <div class="sun">🌞</div>
         <div id="cryptoPlanetsContainer"></div>
-        <div class="info-panel" id="cryptoInfo">Carregando dados das criptomoedas...</div>
-        <div id="loadingSpinner" class="spinner"></div> <!-- Spinner de carregamento -->
+        <div class="info-panel" id="cryptoInfo">Loading cryptocurrency data...</div>
+        <div id="loadingSpinner" class="spinner"></div>
     </div>
 
     <div class="menu">
         <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
         <button onclick="loadUniverse('meme')">Meme Coins</button>
         <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
+        <button onclick="toggleChaosMode()">Chaos Mode</button> <!-- Chaos mode button -->
     </div>
 
     <script>
+        let chaosMode = false;
+
         function createStars() {
             const starsContainer = document.getElementById('starContainer');
             for (let i = 0; i < 200; i++) {
@@ -201,7 +204,7 @@
             };
 
             const url = apiMap[type] || apiMap.market_cap;
-            document.getElementById('loadingSpinner').style.display = 'block';  // Exibe o spinner
+            document.getElementById('loadingSpinner').style.display = 'block';  // Show spinner
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -212,7 +215,7 @@
                 cryptoPlanetsContainer.innerHTML = '';
                 data.slice(0, 10).forEach((crypto, index) => {
                     const distance = 100 + index * 50;
-                    const size = Math.min(50 + Math.sqrt(crypto.market_cap / 1e9), 100); // Ajustando o tamanho
+                    const size = Math.min(50 + Math.sqrt(crypto.market_cap / 1e9), 100); // Adjust size
                     const planet = document.createElement('div');
                     planet.classList.add('crypto-planet');
                     planet.style.setProperty('--distance', `${distance}px`);
@@ -221,9 +224,9 @@
                     const innerPlanet = document.createElement('div');
                     innerPlanet.classList.add('crypto-planet-inner');
                     
-                    // Substituindo a cor aleatória pela imagem da moeda
+                    // Add image of cryptocurrency
                     const planetImage = document.createElement('img');
-                    planetImage.src = crypto.image; // URL da imagem da moeda
+                    planetImage.src = crypto.image; // Image URL
                     planetImage.alt = crypto.name;
                     planetImage.style.width = `${size}px`;
                     planetImage.style.height = `${size}px`;
@@ -231,23 +234,30 @@
 
                     innerPlanet.appendChild(planetImage);
 
-                    planet.addEventListener('mouseover', () => {
-                        infoPanel.innerHTML = `
-                            <strong>${crypto.name}</strong> (${crypto.symbol.toUpperCase()})<br>
-                            Preço: $${crypto.current_price.toFixed(2)}<br>
-                            Market Cap: $${(crypto.market_cap / 1e9).toFixed(2)}B<br>
-                            Variação 24h: ${crypto.price_change_percentage_24h.toFixed(2)}%
-                        `;
-                    });
+                    // Chaos Mode: price fluctuation animation
+                    if (chaosMode) {
+                        const priceChange = crypto.price_change_percentage_24h || 0;
+                        planet.style.animation = `orbit ${10 - index}s linear infinite`;  // Faster orbit for chaos mode
+                        planet.style.transform = `translateY(${priceChange * 1.5}px)`;  // Price influence on orbit
+                    }
 
                     planet.appendChild(innerPlanet);
                     cryptoPlanetsContainer.appendChild(planet);
                 });
+
+                infoPanel.innerHTML = 'Click on a planet for details';
+                document.getElementById('loadingSpinner').style.display = 'none';  // Hide spinner
+
             } catch (error) {
-                console.error('Erro ao carregar dados:', error);
-            } finally {
-                document.getElementById('loadingSpinner').style.display = 'none';  // Esconde o spinner após o carregamento
+                console.error(error);
+                infoPanel.innerHTML = 'Failed to load data';
+                document.getElementById('loadingSpinner').style.display = 'none';  // Hide spinner
             }
+        }
+
+        function toggleChaosMode() {
+            chaosMode = !chaosMode;
+            loadUniverse('market_cap');  // Reload data to apply chaos mode changes
         }
 
         createStars();
@@ -255,4 +265,3 @@
     </script>
 </body>
 </html>
-
