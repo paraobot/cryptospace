@@ -21,6 +21,7 @@
             --menu-color: #fff;
             --kaos-bg: #ff0000;
             --kaos-star-color: rgba(255, 255, 0, 0.8);
+            --aurora-colors: #00ff00, #00ffff, #ff00ff;
         }
         body, html {
             margin: 0;
@@ -52,6 +53,14 @@
         }
         .solar-system.kaos-mode {
             background: radial-gradient(ellipse at bottom, var(--kaos-bg) 0%, #000 100%);
+        }
+        .solar-system.aurora-mode {
+            background: linear-gradient(to bottom, var(--aurora-colors));
+            animation: aurora 5s infinite alternate;
+        }
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
         .stars {
             position: absolute;
@@ -190,7 +199,7 @@
             padding: 10px;
             z-index: 10;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            width: 200px;
+            width: 150px;
         }
         .menu.light-mode {
             background: rgba(255, 255, 255, 0.8);
@@ -322,7 +331,7 @@
         <div class="solar-system" id="solarSystem">
             <div class="stars" id="starContainer"></div>
             <div class="sun">🌞</div>
-            <div class="moon">🌙</div>
+            <div class="moon" id="moon">🌙</div>
             <div id="cryptoPlanetsContainer"></div>
             <div class="info-panel" id="cryptoInfo">Loading cryptocurrency data...</div>
             <div id="loadingSpinner" class="spinner"></div>
@@ -352,6 +361,7 @@
                     <button onclick="setAlienLayout()">Alien Layout</button>
                     <button onclick="setOceanicLayout()">Oceanic Layout</button>
                     <button onclick="setVolcanicLayout()">Volcanic Layout</button>
+                    <button onclick="setAuroraLayout()">Aurora Layout</button>
                 </div>
                 <div class="menu-section">
                     <h3>Settings</h3>
@@ -367,6 +377,8 @@
         let cachedData = {};
         let isLightMode = false;
         let allCryptoData = [];
+        let moonPhaseIndex = 0;
+        const moonPhases = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
 
         // Função para criar estrelas
         function createStars() {
@@ -587,6 +599,12 @@
             loadUniverse('market_cap');
         }
 
+        // Função para definir o layout aurora
+        function setAuroraLayout() {
+            document.getElementById('solarSystem').classList.add('aurora-mode');
+            loadUniverse('market_cap');
+        }
+
         // Função para alternar o tema
         function toggleTheme() {
             isLightMode = !isLightMode;
@@ -650,6 +668,7 @@
             loadUniverse(currentLayout);
             document.getElementById('searchInput').addEventListener('input', searchCrypto);
             renderSolarSystem();
+            setInterval(toggleMoonPhase, 5000); // Change moon phase every 5 seconds
         }
 
         // Função para detectar se é um dispositivo móvel
@@ -665,6 +684,12 @@
                 img.onload = () => resolve(img);
                 img.onerror = reject;
             });
+        }
+
+        // Função para alternar a fase da lua
+        function toggleMoonPhase() {
+            moonPhaseIndex = (moonPhaseIndex + 1) % moonPhases.length;
+            document.getElementById('moon').innerText = moonPhases[moonPhaseIndex];
         }
 
         window.onload = initApp;
