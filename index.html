@@ -188,44 +188,96 @@
             letter-spacing: 1px;
             z-index: 10;
         }
-        .menu {
+        .menu-icon {
             position: absolute;
             top: 10px;
             right: 10px;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
-            background: var(--menu-bg);
-            border-radius: 5px;
-            padding: 10px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #1c1c1c;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px var(--glow-color);
+            width: 50px;
+            height: 50px;
             z-index: 10;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            width: 150px;
+            font-size: 24px;
+            color: white;
         }
-        .menu.light-mode {
-            background: rgba(255, 255, 255, 0.8);
+        .menu-icon.light-mode {
+            background-color: #e0e0e0;
             color: #000;
         }
-        .menu button {
-            background: var(--menu-bg);
-            color: var(--menu-color);
-            border: none;
-            padding: 5px;
-            margin: 2px 0;
-            cursor: pointer;
-            font-size: 12px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            width: 100%;
-            text-align: left;
+        .menu-icon-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
         }
-        .menu button:hover {
-            background-color: var(--menu-hover-bg);
+        .search-planet {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #1c1c1c;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px var(--glow-color);
+            width: 40px;
+            height: 40px;
+            z-index: 10;
+        }
+        .search-planet.light-mode {
+            background-color: #e0e0e0;
+            color: #000;
+        }
+        .search-planet-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+        .search-planet.active {
+            width: 200px;
+            height: 40px;
+            border-radius: 20px;
+        }
+        .search-planet input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background: transparent;
+            color: #fff;
+            font-size: 16px;
+            display: none;
+        }
+        .search-planet.active input {
+            display: block;
         }
         .menu-items {
             display: none;
             flex-direction: column;
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            background: var(--menu-bg);
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 150px;
         }
-        .menu.active .menu-items {
+        .menu-icon.active .menu-items {
             display: flex;
         }
         .menu-section h3 {
@@ -256,31 +308,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        .search-bar {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 25px;
-            background: transparent;
-            color: #fff;
-            font-size: 16px;
-        }
-        .search-bar input.light-mode {
-            background: #fff;
-            color: #000;
         }
         .notification {
             position: absolute;
@@ -321,11 +348,28 @@
             .solar-system {
                 flex-direction: column;
             }
-            .menu {
-                flex-direction: row;
-                width: 100%;
+            .menu-icon {
+                width: 40px;
+                height: 40px;
             }
-            .menu button {
+            .search-planet {
+                width: 30px;
+                height: 30px;
+            }
+            .search-planet.active {
+                width: 150px;
+                height: 30px;
+                border-radius: 15px;
+            }
+            .menu-items {
+                width: 100%;
+                top: auto;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                padding: 5px;
+            }
+            .menu-items button {
                 font-size: 10px;
             }
         }
@@ -335,8 +379,11 @@
     <header>
         <div class="title">Crypto Space</div>
         <div class="subtitle" style="font-size: 12px; color: white;">the ultimate cryptocurrency dashboard that’s truly out of this world!</div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search crypto...">
+        <div class="search-planet" id="searchPlanet">
+            <div class="search-planet-inner">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search crypto...">
+            </div>
         </div>
         <div class="notification" id="notification">Price alert!</div>
     </header>
@@ -348,47 +395,47 @@
             <div id="cryptoPlanetsContainer"></div>
             <div class="info-panel" id="cryptoInfo">Loading cryptocurrency data...</div>
             <div id="loadingSpinner" class="spinner"></div>
-        </div>
-    </main>
-    <footer>
-        <div class="menu" aria-label="Menu" aria-expanded="false" tabindex="0" onclick="toggleMenu()">
-            <button>Menu</button>
-            <div class="menu-items">
-                <div class="menu-section" onclick="toggleSubMenu(event, 'standardModes')">
-                    <h3>Standard Modes <span>▼</span></h3>
-                    <div class="submenu" id="standardModes">
-                        <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
-                        <button onclick="loadUniverse('meme')">Meme Coins</button>
-                        <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
-                    </div>
-                </div>
-                <div class="menu-section" onclick="toggleSubMenu(event, 'specialModes')">
-                    <h3>Special Modes <span>▼</span></h3>
-                    <div class="submenu" id="specialModes">
-                        <button onclick="setAstralLayout()">Astral Layout</button>
-                        <button onclick="setDegenLayout()">Degen Layout</button>
-                        <button onclick="setGalacticLayout()">Galactic Layout</button>
-                        <button onclick="setNebulaLayout()">Nebula Layout</button>
-                        <button onclick="setKaosLayout()">Kaos Layout</button>
-                        <button onclick="setCosmicLayout()">Cosmic Layout</button>
-                        <button onclick="setMysticLayout()">Mystic Layout</button>
-                        <button onclick="setRetroLayout()">Retro Layout</button>
-                        <button onclick="setFuturisticLayout()">Futuristic Layout</button>
-                        <button onclick="setAlienLayout()">Alien Layout</button>
-                        <button onclick="setOceanicLayout()">Oceanic Layout</button>
-                        <button onclick="setVolcanicLayout()">Volcanic Layout</button>
-                        <button onclick="setAuroraLayout()">Aurora Layout</button>
-                    </div>
-                </div>
-                <div class="menu-section" onclick="toggleSubMenu(event, 'settings')">
-                    <h3>Settings <span>▼</span></h3>
-                    <div class="submenu" id="settings">
-                        <button onclick="toggleTheme()">Toggle Theme</button>
+            <div class="menu-icon" aria-label="Menu" aria-expanded="false" tabindex="0" onclick="toggleMenu()">
+                <div class="menu-icon-inner">
+                    ☰
+                    <div class="menu-items">
+                        <div class="menu-section" onclick="toggleSubMenu(event, 'standardModes')">
+                            <h3>Standard Modes <span>▼</span></h3>
+                            <div class="submenu" id="standardModes">
+                                <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
+                                <button onclick="loadUniverse('meme')">Meme Coins</button>
+                                <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
+                            </div>
+                        </div>
+                        <div class="menu-section" onclick="toggleSubMenu(event, 'specialModes')">
+                            <h3>Special Modes <span>▼</span></h3>
+                            <div class="submenu" id="specialModes">
+                                <button onclick="setAstralLayout()">Astral Layout</button>
+                                <button onclick="setDegenLayout()">Degen Layout</button>
+                                <button onclick="setGalacticLayout()">Galactic Layout</button>
+                                <button onclick="setNebulaLayout()">Nebula Layout</button>
+                                <button onclick="setKaosLayout()">Kaos Layout</button>
+                                <button onclick="setCosmicLayout()">Cosmic Layout</button>
+                                <button onclick="setMysticLayout()">Mystic Layout</button>
+                                <button onclick="setRetroLayout()">Retro Layout</button>
+                                <button onclick="setFuturisticLayout()">Futuristic Layout</button>
+                                <button onclick="setAlienLayout()">Alien Layout</button>
+                                <button onclick="setOceanicLayout()">Oceanic Layout</button>
+                                <button onclick="setVolcanicLayout()">Volcanic Layout</button>
+                                <button onclick="setAuroraLayout()">Aurora Layout</button>
+                            </div>
+                        </div>
+                        <div class="menu-section" onclick="toggleSubMenu(event, 'settings')">
+                            <h3>Settings <span>▼</span></h3>
+                            <div class="submenu" id="settings">
+                                <button onclick="toggleTheme()">Toggle Theme</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+    </main>
 
     <script>
         let currentLayout = 'market_cap';
@@ -517,7 +564,7 @@
         // Função para alternar o menu
         function toggleMenu() {
             menuActive = !menuActive;
-            const menu = document.querySelector('.menu');
+            const menu = document.querySelector('.menu-icon');
             menu.setAttribute('aria-expanded', menuActive);
             if (menuActive) {
                 menu.classList.add('active');
@@ -655,8 +702,8 @@
             document.body.classList.toggle('light-mode', isLightMode);
             document.getElementById('solarSystem').classList.toggle('light-mode', isLightMode);
             document.querySelector('.info-panel').classList.toggle('light-mode', isLightMode);
-            document.querySelector('.menu').classList.toggle('light-mode', isLightMode);
-            document.querySelector('.search-bar input').classList.toggle('light-mode', isLightMode);
+            document.querySelector('.menu-icon').classList.toggle('light-mode', isLightMode);
+            document.querySelector('.search-planet input').classList.toggle('light-mode', isLightMode);
             const planets = document.querySelectorAll('.crypto-planet');
             planets.forEach(planet => planet.classList.toggle('light-mode', isLightMode));
         }
@@ -724,6 +771,10 @@
         function initApp() {
             createStars();
             loadUniverse(currentLayout);
+            document.getElementById('searchPlanet').addEventListener('click', () => {
+                document.getElementById('searchPlanet').classList.toggle('active');
+                document.getElementById('searchInput').focus();
+            });
             document.getElementById('searchInput').addEventListener('input', searchCrypto);
             renderSolarSystem();
             setInterval(toggleMoonPhase, 5000); // Change moon phase every 5 seconds
@@ -754,3 +805,4 @@
     </script>
 </body>
 </html>
+
