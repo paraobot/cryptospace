@@ -193,7 +193,6 @@
             <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
             <button onclick="loadUniverse('meme')">Meme Coins</button>
             <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
-            <button onclick="toggleChaosMode()">Chaos Mode</button>
             <button onclick="setAstralLayout()">Astral Layout</button>
             <button onclick="setDegenLayout()">Degen Layout</button>
             <button onclick="setStandardLayout()">Standard Layout</button>
@@ -201,7 +200,6 @@
     </div>
 
     <script>
-        let chaosMode = false;
         let currentLayout = 'market_cap';
         let menuActive = false;
 
@@ -271,13 +269,6 @@
             } else {
                 menu.classList.remove('active');
             }
-        }
-
-        function toggleChaosMode() {
-            chaosMode = !chaosMode;
-            document.body.style.backgroundColor = chaosMode ? '#ff0000' : '#0a0a2a';
-            alert(`Chaos Mode ${chaosMode ? 'Activated' : 'Deactivated'}`);
-        }
 
         function setAstralLayout() {
             document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #ffcc00 0%, #660000 100%)';
