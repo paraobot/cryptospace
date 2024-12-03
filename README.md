@@ -1,55 +1,61 @@
-# 🚀 Crypto Space 🌌
+🚀 Crypto Space 🌌
+Welcome to Crypto Space, the ultimate cryptocurrency dashboard that’s truly out of this world! 🌠
 
-Welcome to **Crypto Space**, the most out-of-this-world cryptocurrency dashboard in the universe! 🌠
+Embark on a journey through the expansive crypto galaxy, where coins orbit like planets, and real-time updates bring the cosmos of cryptocurrency to life. Whether you're tracking top assets, indulging in meme coins, or exploring unique layouts, Crypto Space has you covered. 🤖💰
 
-This project takes you on a journey through the vast expanse of the crypto galaxy. Watch coins orbit like planets, get real-time updates, and maybe even discover a new meme coin! 🤖💰
+🌟 Features
+Standard Modes
+Top Market Cap 🚀: Visualize the leading cryptocurrencies by market capitalization.
+Meme Coins 🎉: Because who doesn’t love a touch of humor in their portfolio?
+Stablecoins 💸: Stability is key, even in the crypto universe.
+Special Modes
+Take your experience to the next level with these extraordinary layouts:
 
-## Features 🌟
+Astral Layout ✨: A celestial view of the crypto market.
+Degen Layout 🤪: Perfect for the high-risk, high-reward adventurer.
+Galactic Layout 🌌: Explore the market like a true spacefarer.
+Nebula Layout 🌠: Immerse yourself in the cosmic beauty of nebulae.
+Kaos Layout 💥: A chaotic, dynamic experience (embrace the randomness).
+Cosmic Layout 🪐: Highlighting the order in celestial chaos.
+Mystic Layout 🔮: Dive into a mystical interpretation of crypto data.
+Retro Layout 🕹️: Travel back in time with a retro aesthetic.
+Futuristic Layout 🚀: For those with their eyes on the horizon.
+Alien Layout 👽: Explore an extraterrestrial twist on the crypto market.
+Oceanic Layout 🌊: A deep dive into the crypto sea.
+Volcanic Layout 🌋: Experience the fiery intensity of the crypto market.
+Settings
+Toggle Theme: Switch between light and dark modes to suit your style.
+Immersive Visuals
+Starry Background ✨: Elevate your dashboard with a galactic atmosphere.
+🎥 Demo
+Take Crypto Space for a spin: Crypto Space - Live Demo
+Sit back, relax, and enjoy the cosmic voyage as you track the crypto market like never before.
 
-- **Market Cap Galore** 🚀: See the top cryptocurrencies based on market capitalization.
-- **Meme Coin Central** 🎉: Because who doesn't love a little Doge in their life?
-- **Stablecoins for the Win** 💸: Because sometimes, we all need a little stability.
-- **Starry Background** ✨: To make your experience feel *extra* cosmic.
+🌍 Getting Started
+📡 Prerequisites
+All you need is a browser. If you're from the future, your holographic interface should work just fine too. 😜
 
-## Demo 🎥
+🌌 Installation
+Clone this repository:
+bash
+Copiar código
+git clone https://github.com/your-username/crypto-space.git  
+Navigate to the project folder:
+bash
+Copiar código
+cd crypto-space  
+Open index.html in your browser and prepare for an interstellar experience.
+💫 Contributing
+Want to add more stars to the Crypto Space universe? ✨
+Feel free to open an issue, submit a pull request, or send a coded message from the Andromeda galaxy.
 
-Check out the live demo on **[Crypto Space - Live Demo](https://paraobot.github.io/cryptospace/)**. Enjoy the space voyage while you watch the crypto world unfold.
+Note: If your contributions result in discovering a planet with valuable crypto, royalties are expected. 😎
 
-## Getting Started 🌍
+👩‍🚀 Credits
+Powered by CoinGecko API for all things crypto.
+Stars, layouts, and cosmic vibes created by the Crypto Space Team (also known as me).
+🔓 License
+This project is licensed under cosmic terms (check the repository for details). 🚀
 
-### Prerequisites 📡
-
-You need a browser (unless you're from the future, in which case, maybe you have a special device to view this on). 😜
-
-### Installation 🌌
-
-1. **Clone this repository**:
-    ```bash
-    git clone https://github.com/your-username/crypto-space.git
-    ```
-2. **Navigate to the project folder**:
-    ```bash
-    cd crypto-space
-    ```
-3. **Open `index.html`** in your browser and prepare for a cosmic journey.
-
-## Contributing 💫
-
-Feel like adding more stars to the universe? ✨ Open an issue, submit a pull request, or just send a carrier pigeon with suggestions.
-
-**Note**: If you manage to discover a new planet with even more valuable crypto, I expect royalties. 😎
-
-## Credits 👩‍🚀👨‍🚀
-
-- Powered by **[CoinGecko API](https://www.coingecko.com/en/api)** for all your crypto needs.
-- Stars, planets, and everything else made by the **Crypto Space Team** (aka, me).
-
-## License 🔓
-
-This project is licensed under the **MIT License** – because, hey, open source is the best kind of space exploration. 🚀
-
----
-
-⭐️ If you like this project, give it a star! ⭐️
-
-Happy coding, and may your portfolios always be green! 💚
+⭐️ If you like the project, don’t forget to give it a star! ⭐️
+Happy coding, and may your portfolios always remain in the green! 💚
