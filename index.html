@@ -848,6 +848,7 @@
             updatePrices();
             startGravitySimulation();
             startExplorer();
+            startTimeLapse();
         }
 
         // Função para detectar se é um dispositivo móvel
@@ -876,14 +877,14 @@
             const detailPanel = document.getElementById('cryptoInfo');
             detailPanel.innerHTML = `
                 <strong>${crypto.name} (${crypto.symbol.toUpperCase()})</strong>
-                <div>Preço: $${crypto.current_price.toFixed(2)}</div>
-                <div>Variação 24h:
+                <div>Price: $${crypto.current_price.toFixed(2)}</div>
+                <div>24h Change:
                     <span style="color: ${crypto.price_change_percentage_24h > 0 ? 'green' : 'red'}">
                         ${crypto.price_change_percentage_24h.toFixed(2)}%
                     </span>
                 </div>
-                <div>Cap. Mercado: $${(crypto.market_cap / 1_000_000).toFixed(2)}M</div>
-                <div>Volume 24h: $${(crypto.total_volume / 1_000_000).toFixed(2)}M</div>
+                <div>Market Cap: $${(crypto.market_cap / 1_000_000).toFixed(2)}M</div>
+                <div>24h Volume: $${(crypto.total_volume / 1_000_000).toFixed(2)}M</div>
                 <div>Rank: #${crypto.market_cap_rank}</div>
             `;
         }
@@ -1193,6 +1194,22 @@
                 }
             }
             moveExplorer();
+        }
+
+        // Função para iniciar o time lapse
+        function startTimeLapse() {
+            const cryptoPlanets = document.querySelectorAll('.crypto-planet');
+            let timeLapseSpeed = 1;
+
+            function updateTimeLapse() {
+                cryptoPlanets.forEach(planet => {
+                    const currentDistance = parseInt(planet.style.getPropertyValue('--distance'));
+                    const newDistance = currentDistance + timeLapseSpeed;
+                    planet.style.setProperty('--distance', `${newDistance}px`);
+                });
+                requestAnimationFrame(updateTimeLapse);
+            }
+            updateTimeLapse();
         }
 
         window.onload = initApp;
