@@ -22,6 +22,9 @@
             --kaos-bg: #ff0000;
             --kaos-star-color: rgba(255, 255, 0, 0.8);
             --aurora-colors: #00ff00, #00ffff, #ff00ff;
+            --primary-color: #0a0a2a;
+            --secondary-color: #4CAF50;
+            --text-color: #ffffff;
         }
         body, html {
             margin: 0;
@@ -375,6 +378,42 @@
             .menu-items button {
                 font-size: 10px;
             }
+        }
+        /* Tema de alto contraste */
+        .high-contrast {
+            --primary-color: #000000;
+            --secondary-color: #FFFF00;
+            --text-color: #FFFFFF;
+        }
+        /* Tema Daltônico */
+        .colorblind-friendly {
+            --primary-color: #2B2B2B;
+            --secondary-color: #3498DB;
+            --text-color: #FFFFFF;
+        }
+        .comparison-panel {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 80%;
+            z-index: 10;
+        }
+        .crypto-comparison-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .crypto-comparison-item img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -785,6 +824,7 @@
             document.getElementById('searchInput').addEventListener('input', searchCrypto);
             renderSolarSystem();
             setInterval(toggleMoonPhase, 5000); // Change moon phase every 5 seconds
+            enhanceAccessibility();
         }
 
         // Função para detectar se é um dispositivo móvel
@@ -807,6 +847,228 @@
             moonPhaseIndex = (moonPhaseIndex + 1) % moonPhases.length;
             document.getElementById('moon').innerText = moonPhases[moonPhaseIndex];
         }
+
+        // Função para mostrar detalhes da criptomoeda
+        function showCryptoDetails(crypto) {
+            const detailPanel = document.getElementById('cryptoInfo');
+            detailPanel.innerHTML = `
+                <strong>${crypto.name} (${crypto.symbol.toUpperCase()})</strong>
+                <div>Preço: $${crypto.current_price.toFixed(2)}</div>
+                <div>Variação 24h:
+                    <span style="color: ${crypto.price_change_percentage_24h > 0 ? 'green' : 'red'}">
+                        ${crypto.price_change_percentage_24h.toFixed(2)}%
+                    </span>
+                </div>
+                <div>Cap. Mercado: $${(crypto.market_cap / 1_000_000).toFixed(2)}M</div>
+                <div>Volume 24h: $${(crypto.total_volume / 1_000_000).toFixed(2)}M</div>
+                <div>Rank: #${crypto.market_cap_rank}</div>
+            `;
+        }
+
+        // Classe para gerenciar alertas de preço
+        class PriceAlertManager {
+            constructor() {
+                this.alerts = JSON.parse(localStorage.getItem('cryptoAlerts') || '[]');
+            }
+
+            addAlert(crypto, targetPrice, condition) {
+                const alert = {
+                    cryptoId: crypto.id,
+                    name: crypto.name,
+                    targetPrice,
+                    condition, // 'above' or 'below'
+                    active: true
+                };
+                this.alerts.push(alert);
+                this.saveAlerts();
+            }
+
+            checkAlerts(cryptoData) {
+                this.alerts.forEach(alert => {
+                    const crypto = cryptoData.find(c => c.id === alert.cryptoId);
+                    if (crypto) {
+                        const triggerCondition =
+                            (alert.condition === 'above' && crypto.current_price > alert.targetPrice) ||
+                            (alert.condition === 'below' && crypto.current_price < alert.targetPrice);
+
+                        if (triggerCondition) {
+                            this.triggerNotification(alert, crypto.current_price);
+                        }
+                    }
+                });
+            }
+
+            triggerNotification(alert, currentPrice) {
+                showNotification(`🚨 ${alert.name} ${alert.condition} $${alert.targetPrice}. Current price: $${currentPrice}`);
+            }
+
+            saveAlerts() {
+                localStorage.setItem('cryptoAlerts', JSON.stringify(this.alerts));
+            }
+        }
+
+        // Classe para comparar criptomoedas
+        class CryptoComparator {
+            constructor() {
+                this.comparisonList = [];
+            }
+
+            addToComparison(crypto) {
+                if (this.comparisonList.length < 4) {
+                    this.comparisonList.push(crypto);
+                    this.renderComparison();
+                } else {
+                    showNotification('Maximum 4 cryptocurrencies for comparison');
+                }
+            }
+
+            renderComparison() {
+                const comparisonPanel = document.createElement('div');
+                comparisonPanel.classList.add('comparison-panel');
+
+                this.comparisonList.forEach(crypto => {
+                    comparisonPanel.innerHTML += `
+                        <div class="crypto-comparison-item">
+                            <img src="${crypto.image}" alt="${crypto.name}">
+                            <div>${crypto.name}</div>
+                            <div>$${crypto.current_price.toFixed(2)}</div>
+                            <div style="color: ${crypto.price_change_percentage_24h > 0 ? 'green' : 'red'}">
+                                ${crypto.price_change_percentage_24h.toFixed(2)}%
+                            </div>
+                        </div>
+                    `;
+                });
+
+                document.body.appendChild(comparisonPanel);
+            }
+        }
+
+        // Implementar cache com expiração
+        const API_CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
+        async function fetchWithCache(url, cacheKey) {
+            const cachedData = localStorage.getItem(cacheKey);
+            const cachedTimestamp = localStorage.getItem(`${cacheKey}_timestamp`);
+
+            if (cachedData && cachedTimestamp) {
+                const currentTime = new Date().getTime();
+                if (currentTime - parseInt(cachedTimestamp) < API_CACHE_DURATION) {
+                    return JSON.parse(cachedData);
+                }
+            }
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+                localStorage.setItem(`${cacheKey}_timestamp`, new Date().getTime().toString());
+
+                return data;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                return JSON.parse(localStorage.getItem(cacheKey) || '[]');
+            }
+        }
+
+        // Classe para rolagem infinita
+        class InfiniteCryptoScroll {
+            constructor(container, pageSize = 10) {
+                this.container = container;
+                this.pageSize = pageSize;
+                this.currentPage = 1;
+                this.allData = [];
+                this.setupScrollListener();
+            }
+
+            loadData(data) {
+                this.allData = data;
+                this.renderPage();
+            }
+
+            renderPage() {
+                const startIndex = (this.currentPage - 1) * this.pageSize;
+                const endIndex = startIndex + this.pageSize;
+                const pageData = this.allData.slice(startIndex, endIndex);
+
+                pageData.forEach(crypto => {
+                    // Renderizar planeta para cada criptomoeda
+                    this.container.appendChild(this.createCryptoPlanet(crypto));
+                });
+            }
+
+            setupScrollListener() {
+                this.container.addEventListener('scroll', () => {
+                    if (this.isNearBottom()) {
+                        this.currentPage++;
+                        this.renderPage();
+                    }
+                });
+            }
+
+            isNearBottom() {
+                const scrollPosition = this.container.scrollTop + this.container.clientHeight;
+                const totalHeight = this.container.scrollHeight;
+                return scrollPosition >= totalHeight - 100;
+            }
+        }
+
+        // Adicionar atributos ARIA e melhorar navegação por teclado
+        function enhanceAccessibility() {
+            const cryptoPlanets = document.querySelectorAll('.crypto-planet');
+            cryptoPlanets.forEach((planet, index) => {
+                planet.setAttribute('tabindex', '0');
+                planet.setAttribute('aria-label', `Cryptocurrency: ${planet.dataset.name}`);
+
+                planet.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        planet.click();
+                    }
+                });
+            });
+        }
+
+        // Exemplo de implementação de proxy seguro
+        async function secureApiCall(endpoint) {
+            try {
+                const response = await fetch('/api/proxy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: endpoint,
+                        apiKey: process.env.COINGECKO_API_KEY
+                    })
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Secure API call failed:', error);
+            }
+        }
+
+        // Classe para limitar a taxa de chamadas de API
+        class RateLimiter {
+            constructor(maxCalls, timeWindow) {
+                this.maxCalls = maxCalls;
+                this.timeWindow = timeWindow;
+                this.calls = [];
+            }
+
+            canMakeCall() {
+                const now = Date.now();
+                this.calls = this.calls.filter(time => now - time < this.timeWindow);
+
+                if (this.calls.length < this.maxCalls) {
+                    this.calls.push(now);
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        const apiRateLimiter = new RateLimiter(5, 60000); // 5 calls per minute
 
         window.onload = initApp;
     </script>
