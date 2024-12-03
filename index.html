@@ -523,10 +523,12 @@
                 planet.style.animation = `orbit ${20 + index * 5}s infinite linear`;
                 planet.style.animationDelay = `${index * 0.5}s`;  // Add delay for spiral effect
 
-                // Corrigir o preço para adicionar mais dois zeros quando for 0.00
-                let price = crypto.current_price.toFixed(2);
-                if (price === '0.00') {
-                    price = '0.0000';
+                // Ajustar a precisão do preço
+                let price = crypto.current_price;
+                if (price < 0.01) {
+                    price = price.toFixed(6);
+                } else {
+                    price = price.toFixed(2);
                 }
 
                 planet.innerHTML = `
@@ -733,10 +735,12 @@
                     planet.style.animation = `orbit ${20 + index * 5}s infinite linear`;
                     planet.style.animationDelay = `${index * 0.5}s`;  // Add delay for spiral effect
 
-                    // Corrigir o preço para adicionar mais dois zeros quando for 0.00
-                    let price = crypto.current_price.toFixed(2);
-                    if (price === '0.00') {
-                        price = '0.0000';
+                    // Ajustar a precisão do preço
+                    let price = crypto.current_price;
+                    if (price < 0.01) {
+                        price = price.toFixed(6);
+                    } else {
+                        price = price.toFixed(2);
                     }
 
                     planet.innerHTML = `
