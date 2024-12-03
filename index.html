@@ -16,6 +16,11 @@
             --light-text-color: #000;
             --glow-color: rgba(0, 255, 255, 0.5);
             --shadow-color: rgba(0, 0, 0, 0.5);
+            --menu-bg: #1e1e1e;
+            --menu-hover-bg: #333;
+            --menu-color: #fff;
+            --kaos-bg: #ff0000;
+            --kaos-star-color: rgba(255, 255, 0, 0.8);
         }
         body, html {
             margin: 0;
@@ -45,6 +50,9 @@
         .solar-system.light-mode {
             background: radial-gradient(ellipse at bottom, #ffffff 0%, #e0e0e0 100%);
         }
+        .solar-system.kaos-mode {
+            background: radial-gradient(ellipse at bottom, var(--kaos-bg) 0%, #000 100%);
+        }
         .stars {
             position: absolute;
             top: 0;
@@ -60,6 +68,10 @@
             border-radius: 50%;
             animation: twinkle 2s infinite alternate;
             box-shadow: 0 0 10px var(--glow-color);
+        }
+        .star.kaos-mode {
+            background-color: var(--kaos-star-color);
+            box-shadow: 0 0 10px var(--kaos-star-color);
         }
         @keyframes twinkle {
             0% { opacity: 0.2; transform: scale(0.5); }
@@ -87,7 +99,8 @@
             position: absolute;
             width: 50px;
             height: 50px;
-            background-color: #c0c0c0;
+            background-color: transparent;
+            border: 2px solid #c0c0c0;
             border-radius: 50%;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             z-index: 10;
@@ -172,7 +185,7 @@
             right: 10px;
             display: flex;
             flex-direction: column;
-            background: rgba(0, 0, 0, 0.8);
+            background: var(--menu-bg);
             border-radius: 5px;
             padding: 10px;
             z-index: 10;
@@ -183,8 +196,8 @@
             color: #000;
         }
         .menu button {
-            background: #ffd700;
-            color: #090a0f;
+            background: var(--menu-bg);
+            color: var(--menu-color);
             border: none;
             padding: 10px;
             margin: 5px 0;
@@ -194,7 +207,7 @@
             transition: background-color 0.3s;
         }
         .menu button:hover {
-            background-color: #e0c000;
+            background-color: var(--menu-hover-bg);
         }
         .menu-items {
             display: none;
@@ -255,6 +268,30 @@
             display: none;
             z-index: 10;
         }
+        .explosion {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.5) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: explode 1s ease-out;
+        }
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        .spaceship {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('spaceship.png') no-repeat center center;
+            background-size: contain;
+            animation: fly 5s linear infinite;
+        }
+        @keyframes fly {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(100vw) translateY(50vh); }
+        }
         @media (max-width: 600px) {
             .solar-system {
                 flex-direction: column;
@@ -294,6 +331,9 @@
                 <button onclick="setAstralLayout()">Astral Layout</button>
                 <button onclick="setDegenLayout()">Degen Layout</button>
                 <button onclick="setStandardLayout()">Standard Layout</button>
+                <button onclick="setGalacticLayout()">Galactic Layout</button>
+                <button onclick="setNebulaLayout()">Nebula Layout</button>
+                <button onclick="setKaosLayout()">Kaos Layout</button>
                 <button onclick="toggleTheme()">Toggle Theme</button>
             </div>
         </div>
@@ -435,6 +475,52 @@
         function setStandardLayout() {
             document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)';
             loadUniverse('stablecoins');
+        }
+
+        // Função para definir o layout galáctico
+        function setGalacticLayout() {
+            document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #000033 0%, #000066 100%)';
+            loadUniverse('market_cap');
+        }
+
+        // Função para definir o layout nebula
+        function setNebulaLayout() {
+            document.getElementById('solarSystem').style.background = 'linear-gradient(to right, #ff7e5f, #feb47b)';
+            loadUniverse('meme');
+        }
+
+        // Função para definir o layout kaos
+        function setKaosLayout() {
+            document.getElementById('solarSystem').classList.add('kaos-mode');
+            const starsContainer = document.getElementById('starContainer');
+            starsContainer.innerHTML = '';
+            for (let i = 0; i < 300; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star', 'kaos-mode');
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(star);
+            }
+            for (let i = 0; i < 10; i++) {
+                const explosion = document.createElement('div');
+                explosion.classList.add('explosion');
+                explosion.style.left = `${Math.random() * 100}%`;
+                explosion.style.top = `${Math.random() * 100}%`;
+                explosion.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(explosion);
+            }
+            for (let i = 0; i < 5; i++) {
+                const spaceship = document.createElement('div');
+                spaceship.classList.add('spaceship');
+                spaceship.style.left = `${Math.random() * 100}%`;
+                spaceship.style.top = `${Math.random() * 100}%`;
+                spaceship.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(spaceship);
+            }
+            loadUniverse('market_cap');
         }
 
         // Função para alternar o tema
