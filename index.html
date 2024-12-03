@@ -269,6 +269,13 @@
             } else {
                 menu.classList.remove('active');
             }
+        }
+
+        function toggleChaosMode() {
+            chaosMode = !chaosMode;
+            document.body.style.backgroundColor = chaosMode ? '#ff0000' : '#0a0a2a';
+            alert(`Chaos Mode ${chaosMode ? 'Activated' : 'Deactivated'}`);
+        }
 
         function setAstralLayout() {
             document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #ffcc00 0%, #660000 100%)';
