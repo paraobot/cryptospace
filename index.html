@@ -190,6 +190,7 @@
             padding: 10px;
             z-index: 10;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 200px;
         }
         .menu.light-mode {
             background: rgba(255, 255, 255, 0.8);
@@ -199,12 +200,14 @@
             background: var(--menu-bg);
             color: var(--menu-color);
             border: none;
-            padding: 10px;
-            margin: 5px 0;
+            padding: 5px;
+            margin: 2px 0;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            width: 100%;
+            text-align: left;
         }
         .menu button:hover {
             background-color: var(--menu-hover-bg);
@@ -298,6 +301,10 @@
             }
             .menu {
                 flex-direction: row;
+                width: 100%;
+            }
+            .menu button {
+                font-size: 10px;
             }
         }
     </style>
@@ -325,16 +332,31 @@
         <div class="menu" aria-label="Menu" aria-expanded="false" tabindex="0" onclick="toggleMenu()">
             <button>Menu</button>
             <div class="menu-items">
-                <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
-                <button onclick="loadUniverse('meme')">Meme Coins</button>
-                <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
-                <button onclick="setAstralLayout()">Astral Layout</button>
-                <button onclick="setDegenLayout()">Degen Layout</button>
-                <button onclick="setStandardLayout()">Standard Layout</button>
-                <button onclick="setGalacticLayout()">Galactic Layout</button>
-                <button onclick="setNebulaLayout()">Nebula Layout</button>
-                <button onclick="setKaosLayout()">Kaos Layout</button>
-                <button onclick="toggleTheme()">Toggle Theme</button>
+                <div class="menu-section">
+                    <h3>Standard Modes</h3>
+                    <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
+                    <button onclick="loadUniverse('meme')">Meme Coins</button>
+                    <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
+                </div>
+                <div class="menu-section">
+                    <h3>Special Modes</h3>
+                    <button onclick="setAstralLayout()">Astral Layout</button>
+                    <button onclick="setDegenLayout()">Degen Layout</button>
+                    <button onclick="setGalacticLayout()">Galactic Layout</button>
+                    <button onclick="setNebulaLayout()">Nebula Layout</button>
+                    <button onclick="setKaosLayout()">Kaos Layout</button>
+                    <button onclick="setCosmicLayout()">Cosmic Layout</button>
+                    <button onclick="setMysticLayout()">Mystic Layout</button>
+                    <button onclick="setRetroLayout()">Retro Layout</button>
+                    <button onclick="setFuturisticLayout()">Futuristic Layout</button>
+                    <button onclick="setAlienLayout()">Alien Layout</button>
+                    <button onclick="setOceanicLayout()">Oceanic Layout</button>
+                    <button onclick="setVolcanicLayout()">Volcanic Layout</button>
+                </div>
+                <div class="menu-section">
+                    <h3>Settings</h3>
+                    <button onclick="toggleTheme()">Toggle Theme</button>
+                </div>
             </div>
         </div>
     </footer>
@@ -520,6 +542,48 @@
                 spaceship.style.animationDelay = `${Math.random() * 2}s`;
                 starsContainer.appendChild(spaceship);
             }
+            loadUniverse('market_cap');
+        }
+
+        // Função para definir o layout cósmico
+        function setCosmicLayout() {
+            document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #2c3e50 0%, #1c2833 100%)';
+            loadUniverse('market_cap');
+        }
+
+        // Função para definir o layout místico
+        function setMysticLayout() {
+            document.getElementById('solarSystem').style.background = 'linear-gradient(to right, #6a11cb, #2575fc)';
+            loadUniverse('meme');
+        }
+
+        // Função para definir o layout retro
+        function setRetroLayout() {
+            document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #ff9a8b 0%, #ff6b6b 100%)';
+            loadUniverse('stablecoins');
+        }
+
+        // Função para definir o layout futurista
+        function setFuturisticLayout() {
+            document.getElementById('solarSystem').style.background = 'linear-gradient(to right, #00c6ff, #0072ff)';
+            loadUniverse('market_cap');
+        }
+
+        // Função para definir o layout alienígena
+        function setAlienLayout() {
+            document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #00ff99 0%, #00cc66 100%)';
+            loadUniverse('meme');
+        }
+
+        // Função para definir o layout oceânico
+        function setOceanicLayout() {
+            document.getElementById('solarSystem').style.background = 'linear-gradient(to right, #4682b4, #0066cc)';
+            loadUniverse('stablecoins');
+        }
+
+        // Função para definir o layout vulcânico
+        function setVolcanicLayout() {
+            document.getElementById('solarSystem').style.background = 'radial-gradient(ellipse at bottom, #ff4500 0%, #cc3300 100%)';
             loadUniverse('market_cap');
         }
 
