@@ -228,6 +228,19 @@
         .menu.active .menu-items {
             display: flex;
         }
+        .menu-section h3 {
+            cursor: pointer;
+        }
+        .menu-section h3 span {
+            margin-left: 10px;
+        }
+        .submenu {
+            display: none;
+            margin-left: 20px;
+        }
+        .submenu button {
+            margin-left: 10px;
+        }
         .spinner {
             position: absolute;
             top: 50%;
@@ -341,31 +354,37 @@
         <div class="menu" aria-label="Menu" aria-expanded="false" tabindex="0" onclick="toggleMenu()">
             <button>Menu</button>
             <div class="menu-items">
-                <div class="menu-section">
-                    <h3>Standard Modes</h3>
-                    <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
-                    <button onclick="loadUniverse('meme')">Meme Coins</button>
-                    <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
+                <div class="menu-section" onclick="toggleSubMenu(event, 'standardModes')">
+                    <h3>Standard Modes <span>▼</span></h3>
+                    <div class="submenu" id="standardModes">
+                        <button onclick="loadUniverse('market_cap')">Top Market Cap</button>
+                        <button onclick="loadUniverse('meme')">Meme Coins</button>
+                        <button onclick="loadUniverse('stablecoins')">Stablecoins</button>
+                    </div>
                 </div>
-                <div class="menu-section">
-                    <h3>Special Modes</h3>
-                    <button onclick="setAstralLayout()">Astral Layout</button>
-                    <button onclick="setDegenLayout()">Degen Layout</button>
-                    <button onclick="setGalacticLayout()">Galactic Layout</button>
-                    <button onclick="setNebulaLayout()">Nebula Layout</button>
-                    <button onclick="setKaosLayout()">Kaos Layout</button>
-                    <button onclick="setCosmicLayout()">Cosmic Layout</button>
-                    <button onclick="setMysticLayout()">Mystic Layout</button>
-                    <button onclick="setRetroLayout()">Retro Layout</button>
-                    <button onclick="setFuturisticLayout()">Futuristic Layout</button>
-                    <button onclick="setAlienLayout()">Alien Layout</button>
-                    <button onclick="setOceanicLayout()">Oceanic Layout</button>
-                    <button onclick="setVolcanicLayout()">Volcanic Layout</button>
-                    <button onclick="setAuroraLayout()">Aurora Layout</button>
+                <div class="menu-section" onclick="toggleSubMenu(event, 'specialModes')">
+                    <h3>Special Modes <span>▼</span></h3>
+                    <div class="submenu" id="specialModes">
+                        <button onclick="setAstralLayout()">Astral Layout</button>
+                        <button onclick="setDegenLayout()">Degen Layout</button>
+                        <button onclick="setGalacticLayout()">Galactic Layout</button>
+                        <button onclick="setNebulaLayout()">Nebula Layout</button>
+                        <button onclick="setKaosLayout()">Kaos Layout</button>
+                        <button onclick="setCosmicLayout()">Cosmic Layout</button>
+                        <button onclick="setMysticLayout()">Mystic Layout</button>
+                        <button onclick="setRetroLayout()">Retro Layout</button>
+                        <button onclick="setFuturisticLayout()">Futuristic Layout</button>
+                        <button onclick="setAlienLayout()">Alien Layout</button>
+                        <button onclick="setOceanicLayout()">Oceanic Layout</button>
+                        <button onclick="setVolcanicLayout()">Volcanic Layout</button>
+                        <button onclick="setAuroraLayout()">Aurora Layout</button>
+                    </div>
                 </div>
-                <div class="menu-section">
-                    <h3>Settings</h3>
-                    <button onclick="toggleTheme()">Toggle Theme</button>
+                <div class="menu-section" onclick="toggleSubMenu(event, 'settings')">
+                    <h3>Settings <span>▼</span></h3>
+                    <div class="submenu" id="settings">
+                        <button onclick="toggleTheme()">Toggle Theme</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -504,6 +523,17 @@
                 menu.classList.add('active');
             } else {
                 menu.classList.remove('active');
+            }
+        }
+
+        // Função para alternar os submenus
+        function toggleSubMenu(event, submenuId) {
+            event.stopPropagation();
+            const submenu = document.getElementById(submenuId);
+            if (submenu.style.display === 'block') {
+                submenu.style.display = 'none';
+            } else {
+                submenu.style.display = 'block';
             }
         }
 
