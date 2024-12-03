@@ -1,5 +1,9 @@
-🚀 Crypto Space 🌌
-Welcome to Crypto Space, the ultimate cryptocurrency dashboard that’s truly out of this world! 🌠
+
+# 🚀 Crypto Space 🌌  
+
+**Welcome to Crypto Space, the ultimate cryptocurrency dashboard that’s truly out of this world!** 🌠  
+
+---
 
 Embark on a journey through the expansive crypto galaxy, where coins orbit like planets, and real-time updates bring the cosmos of cryptocurrency to life. Whether you're tracking top assets, indulging in meme coins, or exploring unique layouts, Crypto Space has you covered. 🤖💰
 
