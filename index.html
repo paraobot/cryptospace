@@ -14,6 +14,7 @@
             --button-color: #fff;
             --text-color: #fff;
             --light-text-color: #000;
+            --glow-color: rgba(0, 255, 255, 0.5);
         }
         body, html {
             margin: 0;
@@ -89,7 +90,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             background-color: #1c1c1c;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px var(--glow-color);
         }
         .crypto-planet.light-mode {
             background-color: #e0e0e0;
@@ -252,7 +253,7 @@
 <body>
     <header>
         <div class="title">Crypto Space</div>
-        <div class="subtitle">"In crypto, it's all or nothing. #DegenMode"</div>
+        <div class="subtitle" style="font-size: 12px; color: white;">"In crypto, it's all or nothing. #DegenMode"</div>
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search crypto...">
         </div>
@@ -359,7 +360,7 @@
                 planet.style.setProperty('--distance', `${distance}px`);
                 planet.style.width = `${Math.random() * 40 + 30}px`;
                 planet.style.height = planet.style.width;
-                planet.style.animation = `orbit 20s infinite linear`;
+                planet.style.animation = `orbit ${20 + index * 5}s infinite linear`;
                 planet.style.animationDelay = `${index * 0.5}s`;  // Add delay for spiral effect
                 planet.innerHTML = `
                     <div class="crypto-planet-inner">
@@ -435,7 +436,7 @@
                     planet.style.setProperty('--distance', `${distance}px`);
                     planet.style.width = `${Math.random() * 40 + 30}px`;
                     planet.style.height = planet.style.width;
-                    planet.style.animation = `orbit 20s infinite linear`;
+                    planet.style.animation = `orbit ${20 + index * 5}s infinite linear`;
                     planet.style.animationDelay = `${index * 0.5}s`;  // Add delay for spiral effect
                     planet.innerHTML = `
                         <div class="crypto-planet-inner">
