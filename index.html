@@ -15,6 +15,7 @@
             --text-color: #fff;
             --light-text-color: #000;
             --glow-color: rgba(0, 255, 255, 0.5);
+            --shadow-color: rgba(0, 0, 0, 0.5);
         }
         body, html {
             margin: 0;
@@ -58,6 +59,7 @@
             background-color: white;
             border-radius: 50%;
             animation: twinkle 2s infinite alternate;
+            box-shadow: 0 0 10px var(--glow-color);
         }
         @keyframes twinkle {
             0% { opacity: 0.2; transform: scale(0.5); }
@@ -80,6 +82,19 @@
         @keyframes pulse {
             0% { transform: scale(1); }
             100% { transform: scale(1.1); }
+        }
+        .moon {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #c0c0c0;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            font-size: 3rem;
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
         }
         .crypto-planet {
             position: absolute;
@@ -263,6 +278,7 @@
         <div class="solar-system" id="solarSystem">
             <div class="stars" id="starContainer"></div>
             <div class="sun">🌞</div>
+            <div class="moon">🌙</div>
             <div id="cryptoPlanetsContainer"></div>
             <div class="info-panel" id="cryptoInfo">Loading cryptocurrency data...</div>
             <div id="loadingSpinner" class="spinner"></div>
@@ -338,6 +354,7 @@
 
                 allCryptoData = data;
                 renderPlanets(data);
+                renderSolarSystem();
 
                 document.getElementById('loadingSpinner').style.display = 'none';  // Hide spinner
             } catch (error) {
@@ -373,6 +390,21 @@
                 });
                 cryptoPlanetsContainer.appendChild(planet);
             });
+        }
+
+        // Função para renderizar o sistema solar
+        function renderSolarSystem() {
+            const sun = document.querySelector('.sun');
+            const moon = document.querySelector('.moon');
+            const moonOrbit = moon.getBoundingClientRect();
+            const sunCenter = sun.offsetWidth / 2;
+            let moonAngle = 0;
+            function animateMoon() {
+                moonAngle = (moonAngle + 1) % 360;
+                moon.style.transform = `translate(${sunCenter + sunCenter * Math.cos(Math.PI / 180 * moonAngle)}px, ${sunCenter - sunCenter * Math.sin(Math.PI / 180 * moonAngle)}px)`;
+                requestAnimationFrame(animateMoon);
+            }
+            animateMoon();
         }
 
         // Função para alternar o menu
@@ -467,6 +499,22 @@
             createStars();
             loadUniverse(currentLayout);
             document.getElementById('searchInput').addEventListener('input', searchCrypto);
+            renderSolarSystem();
+        }
+
+        // Função para detectar se é um dispositivo móvel
+        function isMobileDevice() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
+        // Função para carregar imagens de forma assíncrona
+        async function loadImageAsync(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+            });
         }
 
         window.onload = initApp;
