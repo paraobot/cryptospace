@@ -415,6 +415,20 @@
             height: 30px;
             margin-right: 10px;
         }
+        .tutorial {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10;
+            display: none;
+        }
+        .tutorial.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -428,6 +442,10 @@
             </div>
         </div>
         <div class="notification" id="notification">Price alert!</div>
+        <div class="tutorial" id="tutorial">
+            <p>Welcome to Crypto Space! Click on the planets to see more details.</p>
+            <button onclick="hideTutorial()">Got it!</button>
+        </div>
     </header>
     <main>
         <div class="solar-system" id="solarSystem">
@@ -555,6 +573,7 @@
                 const distance = 100 + index * 50;
                 const planet = document.createElement('div');
                 planet.classList.add('crypto-planet');
+                planet.dataset.id = crypto.id;
                 if (isLightMode) planet.classList.add('light-mode');
                 planet.style.setProperty('--distance', `${distance}px`);
                 planet.style.width = `${Math.random() * 40 + 30}px`;
@@ -825,6 +844,10 @@
             renderSolarSystem();
             setInterval(toggleMoonPhase, 5000); // Change moon phase every 5 seconds
             enhanceAccessibility();
+            showTutorial();
+            updatePrices();
+            startGravitySimulation();
+            startExplorer();
         }
 
         // Função para detectar se é um dispositivo móvel
@@ -1070,7 +1093,110 @@
 
         const apiRateLimiter = new RateLimiter(5, 60000); // 5 calls per minute
 
+        // Função para mostrar o tutorial
+        function showTutorial() {
+            const tutorial = document.getElementById('tutorial');
+            tutorial.classList.add('active');
+        }
+
+        // Função para esconder o tutorial
+        function hideTutorial() {
+            const tutorial = document.getElementById('tutorial');
+            tutorial.classList.remove('active');
+        }
+
+        // Função para atualizar os preços a cada 5 segundos
+        async function updatePrices() {
+            const apiMap = {
+                market_cap: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc',
+                meme: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=meme-token',
+                stablecoins: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=stablecoins',
+            };
+
+            const url = apiMap[currentLayout] || apiMap.market_cap;
+            try {
+                const data = await fetchData(url);
+                updatePlanetPrices(data);
+            } catch (error) {
+                console.error('Error updating prices:', error);
+            }
+        }
+
+        // Função para atualizar os preços dos planetas
+        function updatePlanetPrices(data) {
+            const cryptoPlanets = document.querySelectorAll('.crypto-planet');
+            cryptoPlanets.forEach(planet => {
+                const crypto = data.find(c => c.id === planet.dataset.id);
+                if (crypto) {
+                    let price = crypto.current_price;
+                    if (price < 0.01) {
+                        price = price.toFixed(6);
+                    } else {
+                        price = price.toFixed(2);
+                    }
+                    planet.querySelector('.crypto-price').innerText = `$${price}`;
+                }
+            });
+        }
+
+        // Função para iniciar a simulação de gravidade
+        function startGravitySimulation() {
+            const cryptoPlanets = document.querySelectorAll('.crypto-planet');
+            const sun = document.querySelector('.sun');
+            const sunCenter = { x: sun.offsetLeft + sun.offsetWidth / 2, y: sun.offsetTop + sun.offsetHeight / 2 };
+
+            function applyGravity() {
+                cryptoPlanets.forEach(planet => {
+                    const planetRect = planet.getBoundingClientRect();
+                    const planetCenter = { x: planetRect.left + planetRect.width / 2, y: planetRect.top + planetRect.height / 2 };
+                    const distance = Math.hypot(planetCenter.x - sunCenter.x, planetCenter.y - sunCenter.y);
+                    const force = 1000 / (distance * distance);
+                    const angle = Math.atan2(planetCenter.y - sunCenter.y, planetCenter.x - sunCenter.x);
+                    const dx = Math.cos(angle) * force;
+                    const dy = Math.sin(angle) * force;
+
+                    planet.style.transform = `translate(${planet.offsetLeft + dx}px, ${planet.offsetTop + dy}px)`;
+                });
+                requestAnimationFrame(applyGravity);
+            }
+            applyGravity();
+        }
+
+        // Função para iniciar o explorador automático
+        function startExplorer() {
+            const explorer = document.createElement('div');
+            explorer.classList.add('spaceship');
+            explorer.style.left = '50%';
+            explorer.style.top = '50%';
+            document.getElementById('solarSystem').appendChild(explorer);
+
+            function moveExplorer() {
+                const cryptoPlanets = document.querySelectorAll('.crypto-planet');
+                const targetPlanet = cryptoPlanets[Math.floor(Math.random() * cryptoPlanets.length)];
+                const targetRect = targetPlanet.getBoundingClientRect();
+                const explorerRect = explorer.getBoundingClientRect();
+                const dx = targetRect.left - explorerRect.left;
+                const dy = targetRect.top - explorerRect.top;
+                const distance = Math.hypot(dx, dy);
+                const speed = 1;
+                const stepX = (dx / distance) * speed;
+                const stepY = (dy / distance) * speed;
+
+                explorer.style.left = `${explorer.offsetLeft + stepX}px`;
+                explorer.style.top = `${explorer.offsetTop + stepY}px`;
+
+                if (distance > 5) {
+                    requestAnimationFrame(moveExplorer);
+                } else {
+                    showNotification(`Explorer reached ${targetPlanet.dataset.name}`);
+                    setTimeout(moveExplorer, 2000);
+                }
+            }
+            moveExplorer();
+        }
+
         window.onload = initApp;
+        setInterval(updatePrices, 5000); // Atualizar preços a cada 5 segundos
     </script>
 </body>
 </html>
