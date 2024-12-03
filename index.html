@@ -160,6 +160,7 @@
             border-radius: 5px;
             padding: 10px;
             z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         .menu.light-mode {
             background: rgba(255, 255, 255, 0.8);
@@ -174,6 +175,10 @@
             cursor: pointer;
             font-size: 14px;
             border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .menu button:hover {
+            background-color: #e0c000;
         }
         .menu-items {
             display: none;
@@ -205,13 +210,19 @@
             transform: translateX(-50%);
             width: 300px;
             z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         .search-bar input {
             width: 100%;
             padding: 10px;
             border: none;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 25px;
+            background: transparent;
+            color: #fff;
+            font-size: 16px;
         }
         .search-bar input.light-mode {
             background: #fff;
@@ -284,7 +295,7 @@
             for (let i = 0; i < 200; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
-                star.style.width = `${Math.random() * 3}px`;
+                star.style.width = `${Math.random() * 2}px`;
                 star.style.height = star.style.width;
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
@@ -349,6 +360,7 @@
                 planet.style.width = `${Math.random() * 40 + 30}px`;
                 planet.style.height = planet.style.width;
                 planet.style.animation = `orbit 20s infinite linear`;
+                planet.style.animationDelay = `${index * 0.5}s`;  // Add delay for spiral effect
                 planet.innerHTML = `
                     <div class="crypto-planet-inner">
                         <img src="${crypto.image}" alt="${crypto.name}" width="30" height="30" loading="lazy">
@@ -412,26 +424,31 @@
             const filteredCryptos = allCryptoData.filter(crypto => crypto.name.toLowerCase().includes(query));
 
             cryptoPlanetsContainer.innerHTML = '';
-            filteredCryptos.forEach((crypto, index) => {
-                const distance = 100 + index * 50;
-                const planet = document.createElement('div');
-                planet.classList.add('crypto-planet');
-                if (isLightMode) planet.classList.add('light-mode');
-                planet.style.setProperty('--distance', `${distance}px`);
-                planet.style.width = `${Math.random() * 40 + 30}px`;
-                planet.style.height = planet.style.width;
-                planet.style.animation = `orbit 20s infinite linear`;
-                planet.innerHTML = `
-                    <div class="crypto-planet-inner">
-                        <img src="${crypto.image}" alt="${crypto.name}" width="30" height="30" loading="lazy">
-                    </div>
-                    <div class="crypto-price">$${crypto.current_price.toFixed(2)}</div>
-                `;
-                planet.addEventListener('click', () => {
-                    infoPanel.innerHTML = `<strong>${crypto.name}</strong><br>Price: $${crypto.current_price.toFixed(2)}`;
+            if (filteredCryptos.length === 0) {
+                infoPanel.innerText = 'No results found. Please check the symbol and try again.';
+            } else {
+                filteredCryptos.forEach((crypto, index) => {
+                    const distance = 100 + index * 50;
+                    const planet = document.createElement('div');
+                    planet.classList.add('crypto-planet');
+                    if (isLightMode) planet.classList.add('light-mode');
+                    planet.style.setProperty('--distance', `${distance}px`);
+                    planet.style.width = `${Math.random() * 40 + 30}px`;
+                    planet.style.height = planet.style.width;
+                    planet.style.animation = `orbit 20s infinite linear`;
+                    planet.style.animationDelay = `${index * 0.5}s`;  // Add delay for spiral effect
+                    planet.innerHTML = `
+                        <div class="crypto-planet-inner">
+                            <img src="${crypto.image}" alt="${crypto.name}" width="30" height="30" loading="lazy">
+                        </div>
+                        <div class="crypto-price">$${crypto.current_price.toFixed(2)}</div>
+                    `;
+                    planet.addEventListener('click', () => {
+                        infoPanel.innerHTML = `<strong>${crypto.name}</strong><br>Price: $${crypto.current_price.toFixed(2)}`;
+                    });
+                    cryptoPlanetsContainer.appendChild(planet);
                 });
-                cryptoPlanetsContainer.appendChild(planet);
-            });
+            }
         }
 
         // Função para mostrar notificações
